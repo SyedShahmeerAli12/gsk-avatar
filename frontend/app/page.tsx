@@ -80,9 +80,10 @@ export default function Page() {
   const streamRef     = useRef<MediaStream | null>(null);
   const micTrackRef   = useRef<MediaStreamTrack | null>(null);
   const nativeRateRef = useRef<number>(48000);
-  const cameraVideoRef  = useRef<HTMLVideoElement | null>(null);
-  const cameraStreamRef = useRef<MediaStream | null>(null);
-  const timerRef        = useRef<ReturnType<typeof setInterval> | null>(null);
+  const cameraVideoRef    = useRef<HTMLVideoElement | null>(null);
+  const cameraStreamRef   = useRef<MediaStream | null>(null);
+  const timerRef          = useRef<ReturnType<typeof setInterval> | null>(null);
+  const reconnectCountRef = useRef(0);
 
   const addTranscript = useCallback((role: "user" | "assistant", text: string) => {
     setTranscript((prev) => [...prev, { role, text }]);
@@ -112,6 +113,7 @@ export default function Page() {
   useEffect(() => {
     if (anam.isConnected && sessionState === "connecting") {
       setSessionState("active");
+      reconnectCountRef.current = 0;
       startMic();
       startCamera();
       timerRef.current = setInterval(() => setElapsed((e) => e + 1), 1000);
@@ -120,6 +122,24 @@ export default function Page() {
       if (vid) { vid.muted = false; vid.volume = 1.0; vid.play().catch(() => {}); }
     }
   }, [anam.isConnected, sessionState]);
+
+  // Auto-reconnect the relay if it drops mid-session (e.g. transient OpenAI server error)
+  useEffect(() => {
+    if (!relay.isConnected && sessionState === "active" && reconnectCountRef.current < 3) {
+      reconnectCountRef.current++;
+      const timer = setTimeout(() => {
+        relay.connect(
+          (b64) => anam.sendAudioChunk(int16ToBase64(resampleTo(base64ToInt16(b64), 24000, 16000))),
+          addTranscript,
+          () => {},
+          () => anam.endAudioSequence(),
+          undefined,
+          () => { if (micTrackRef.current) micTrackRef.current.enabled = false; },
+        );
+      }, 1500);
+      return () => clearTimeout(timer);
+    }
+  }, [relay.isConnected, sessionState]);
 
   const startMic = async () => {
     // Stream already obtained in handleConnect — reuse it
