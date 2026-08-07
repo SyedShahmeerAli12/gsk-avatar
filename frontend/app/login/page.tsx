@@ -26,7 +26,7 @@ export default function LoginPage() {
       }
       const { token } = await res.json();
       sessionStorage.setItem("jadwa_token", token);
-      window.location.href = "/splash.html";
+      router.push("/splash");
     } catch {
       setError("Connection error. Please try again.");
     } finally {
