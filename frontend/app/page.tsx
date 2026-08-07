@@ -1,7 +1,6 @@
 "use client";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import Avatar from "./components/Avatar";
 import { useAnam } from "./hooks/useAnam";
 import { useRealtimeRelay } from "./hooks/useRealtimeRelay";
 
@@ -36,30 +35,9 @@ function int16ToBase64(arr: Int16Array): string {
   return btoa(binary);
 }
 
-type Screen = "consultation" | "summary" | "faq";
+type Screen = "consultation" | "summary";
 
 interface Message { role: "user" | "assistant"; text: string; }
-
-const FAQS = [
-  { q: "How can I open an investment account?", a: "Open digitally through our onboarding portal using your Saudi National ID or Iqama, mobile number, and email. KYC verification takes only a few minutes." },
-  { q: "What documents are required?", a: "Saudi National ID or Iqama, valid mobile number, email address, source of income details, and FATCA/CRS declarations where applicable." },
-  { q: "Can non-residents open an account?", a: "Yes. Eligible non-resident investors may open accounts subject to regulatory approvals and additional KYC documents such as passport, visa, and proof of overseas address." },
-  { q: "How long does account opening take?", a: "Digital onboarding completes within minutes. Compliance and KYC review may take a few hours to 2 business days depending on document completeness." },
-  { q: "Is physical presence required?", a: "Most accounts open digitally via Nafath verification. In certain cases, additional verification may be required." },
-  { q: "What is KYC and why is it required?", a: "Know Your Customer is a regulatory requirement to verify your identity, source of funds, and investment objectives to comply with AML regulations." },
-  { q: "What is FATCA?", a: "Foreign Account Tax Compliance Act — a US regulation identifying US taxpayers holding foreign financial accounts." },
-  { q: "Why was my application rejected?", a: "Common reasons include incomplete documentation, failed identity verification, expired ID, or compliance concerns." },
-  { q: "What investment products do you offer?", a: "Mutual Funds, Sukuk, Equity Portfolios, Discretionary Portfolio Management, ETFs, Money Market Funds, and Wealth Management Solutions." },
-  { q: "Do you offer Shariah-compliant investments?", a: "Yes. We offer Shariah-compliant products certified by an appointed Shariah Board, designed according to Islamic finance principles." },
-  { q: "What is the minimum investment amount?", a: "It varies by product. Some funds start from SAR 1,000 while discretionary portfolios may require higher minimums." },
-  { q: "Can I withdraw my investments anytime?", a: "Liquidity depends on the product. Open-ended funds allow redemptions within a few business days. Certain products have lock-in periods." },
-  { q: "What is risk tolerance?", a: "Your ability and willingness to handle fluctuations in the value of your investments. It helps us recommend the right products for you." },
-  { q: "I did not receive my OTP.", a: "Please verify your mobile number and ensure network connectivity. If the issue continues, we can resend the OTP or connect you to support." },
-  { q: "My Nafath verification failed.", a: "Ensure your Nafath application is active and linked to your valid National ID or Iqama. Retry after a few minutes." },
-  { q: "Is my information secure?", a: "Yes. We use secure encryption, authentication protocols, and regulatory compliance controls to protect your personal and financial information." },
-  { q: "Can businesses open investment accounts?", a: "Yes. Corporate clients need commercial registration documents, authorized signatories, and corporate KYC documentation." },
-  { q: "How can I contact customer support?", a: "You can reach us via phone, email, live chat, WhatsApp, or through a dedicated relationship manager." },
-];
 
 export default function Page() {
   const router = useRouter();
@@ -80,10 +58,9 @@ export default function Page() {
   const streamRef     = useRef<MediaStream | null>(null);
   const micTrackRef   = useRef<MediaStreamTrack | null>(null);
   const nativeRateRef = useRef<number>(48000);
-  const cameraVideoRef    = useRef<HTMLVideoElement | null>(null);
-  const cameraStreamRef   = useRef<MediaStream | null>(null);
-  const timerRef          = useRef<ReturnType<typeof setInterval> | null>(null);
-  const reconnectCountRef = useRef(0);
+  const cameraVideoRef  = useRef<HTMLVideoElement | null>(null);
+  const cameraStreamRef = useRef<MediaStream | null>(null);
+  const timerRef        = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const addTranscript = useCallback((role: "user" | "assistant", text: string) => {
     setTranscript((prev) => [...prev, { role, text }]);
@@ -113,7 +90,6 @@ export default function Page() {
   useEffect(() => {
     if (anam.isConnected && sessionState === "connecting") {
       setSessionState("active");
-      reconnectCountRef.current = 0;
       startMic();
       startCamera();
       timerRef.current = setInterval(() => setElapsed((e) => e + 1), 1000);
@@ -122,24 +98,6 @@ export default function Page() {
       if (vid) { vid.muted = false; vid.volume = 1.0; vid.play().catch(() => {}); }
     }
   }, [anam.isConnected, sessionState]);
-
-  // Auto-reconnect the relay if it drops mid-session (e.g. transient OpenAI server error)
-  useEffect(() => {
-    if (!relay.isConnected && sessionState === "active" && reconnectCountRef.current < 3) {
-      reconnectCountRef.current++;
-      const timer = setTimeout(() => {
-        relay.connect(
-          (b64) => anam.sendAudioChunk(int16ToBase64(resampleTo(base64ToInt16(b64), 24000, 16000))),
-          addTranscript,
-          () => {},
-          () => anam.endAudioSequence(),
-          undefined,
-          () => { if (micTrackRef.current) micTrackRef.current.enabled = false; },
-        );
-      }, 1500);
-      return () => clearTimeout(timer);
-    }
-  }, [relay.isConnected, sessionState]);
 
   const startMic = async () => {
     // Stream already obtained in handleConnect — reuse it
@@ -261,7 +219,7 @@ export default function Page() {
       setSummary(data.summary || "Session complete.");
       setTopics(data.topics || []);
     } catch {
-      setSummary("Session complete. Thank you for consulting with Sara.");
+      setSummary("Session complete.");
       setTopics([]);
     } finally {
       setSummarizing(false);
@@ -277,7 +235,6 @@ export default function Page() {
     setScreen("consultation");
     setSessionState("idle");
   }, []);
-
 
   const toggleMute = useCallback(() => {
     if (!micTrackRef.current) return;
@@ -303,47 +260,8 @@ export default function Page() {
 
   if (!authed) return null;
 
-  const isIdle       = sessionState === "idle";
   const isConnecting = sessionState === "connecting";
   const isActive     = sessionState === "active";
-
-  // ── FAQ screen ────────────────────────────────────────────────────────────
-  if (screen === "faq") {
-    return (
-      <div className="min-h-screen bg-gray-50 p-4 sm:p-6">
-        <div className="max-w-2xl mx-auto">
-          <div className="flex items-center gap-3 mb-6">
-            <button onClick={() => setScreen("summary")} className="text-gray-400 hover:text-gray-600 transition-colors mr-1">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-              </svg>
-            </button>
-            <img src="/dt-logo.png" alt="DigiTrends" className="h-8 flex-shrink-0" />
-            <div>
-              <p className="text-xs text-gray-400 uppercase tracking-wider leading-none mb-0.5">Knowledge Base</p>
-              <h2 className="text-lg font-bold text-gray-900 leading-none">Frequently Asked Questions</h2>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
-            {FAQS.map((faq, i) => (
-              <div key={i} className="bg-white border border-gray-200 rounded-xl p-4 shadow-sm">
-                <p className="text-sm font-semibold text-dt-red mb-1.5">{faq.q}</p>
-                <p className="text-sm text-gray-600 leading-relaxed">{faq.a}</p>
-              </div>
-            ))}
-          </div>
-
-          <button
-            onClick={handleRestart}
-            className="w-full py-3.5 rounded-xl bg-dt-red text-white font-semibold text-sm hover:opacity-90 transition-colors"
-          >
-            Start New Session
-          </button>
-        </div>
-      </div>
-    );
-  }
 
   // ── Summary screen ────────────────────────────────────────────────────────
   if (screen === "summary") {
@@ -353,22 +271,22 @@ export default function Page() {
 
           {/* Header */}
           <div className="flex items-center gap-3 mb-6">
-            <img src="/dt-logo.png" alt="DigiTrends" className="h-8 flex-shrink-0" />
             <div>
               <p className="text-xs text-gray-400 uppercase tracking-wider leading-none mb-0.5">Session Complete</p>
               <h2 className="text-lg font-bold text-gray-900 leading-none">Consultation Summary</h2>
             </div>
           </div>
 
-          {/* Sara card */}
+          {/* Patient card */}
           <div className="bg-white border border-gray-200 rounded-2xl shadow-sm p-6 mb-4">
             <div className="flex items-center gap-3 mb-4 pb-4 border-b border-gray-100">
-              <div className="w-10 h-10 rounded-full bg-dt-red flex items-center justify-center flex-shrink-0">
-                <span className="text-white font-bold text-sm">S</span>
+              <div className="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0"
+                style={{ background: "linear-gradient(118deg,#fe7d2e,#f53e2a)" }}>
+                <span className="text-white font-bold text-sm">AK</span>
               </div>
               <div>
-                <p className="text-sm font-semibold text-gray-900">Sara</p>
-                <p className="text-xs text-gray-400">DT Voice Assistant</p>
+                <p className="text-sm font-semibold text-gray-900">Ayesha Khan</p>
+                <p className="text-xs text-gray-400">Patient · Rhinosinusitis Case</p>
               </div>
               <div className="ml-auto">
                 <span className="text-xs px-2 py-1 rounded-full bg-green-100 text-green-700 font-medium">Session Ended</span>
@@ -377,7 +295,7 @@ export default function Page() {
 
             {summarizing ? (
               <div className="flex items-center gap-2 text-gray-400 py-2">
-                <svg className="animate-spin h-4 w-4 text-dt-red" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <svg className="animate-spin h-4 w-4" style={{ color: "#fe7d2e" }} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                   <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                   <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
                 </svg>
@@ -386,13 +304,13 @@ export default function Page() {
             ) : (
               <>
                 <p className="text-sm text-gray-700 leading-relaxed mb-4">{summary}</p>
-
                 {topics.length > 0 && (
                   <>
                     <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Topics Covered</p>
                     <div className="flex flex-wrap gap-2">
                       {topics.map((t, i) => (
-                        <span key={i} className="text-xs px-3 py-1.5 rounded-full bg-red-50 text-dt-red font-medium border border-red-100">
+                        <span key={i} className="text-xs px-3 py-1.5 rounded-full font-medium border"
+                          style={{ background: "#fff5f0", color: "#f53e2a", borderColor: "#ffd0c0" }}>
                           {t}
                         </span>
                       ))}
@@ -406,14 +324,9 @@ export default function Page() {
           {/* Actions */}
           <div className="flex flex-col gap-3 mt-auto">
             <button
-              onClick={() => setScreen("faq")}
-              className="w-full py-3.5 rounded-xl border-2 border-dt-red text-dt-red font-semibold text-sm hover:bg-red-50 transition-colors"
-            >
-              FAQs
-            </button>
-            <button
               onClick={handleRestart}
-              className="w-full py-3.5 rounded-xl bg-dt-red text-white font-semibold text-sm hover:opacity-90 transition-colors"
+              className="w-full py-3.5 rounded-xl text-white font-semibold text-sm hover:opacity-90 transition-colors"
+              style={{ background: "linear-gradient(118deg,#fe7d2e,#f53e2a)" }}
             >
               Start New Session
             </button>
@@ -423,7 +336,7 @@ export default function Page() {
     );
   }
 
-  // ── Consultation screen — your design (index 5) ──────────────────────────
+  // ── Consultation screen ───────────────────────────────────────────────────
   return (
     <>
       <style>{`
@@ -483,40 +396,15 @@ export default function Page() {
         @media (max-width: 640px) {
           .topbar{padding:8px 14px;}
           .topbar h1{font-size:13px;line-height:1.3;}
-
-          /* video area: no padding, avatar fills everything */
           .video-wrap{padding:0;gap:0;}
           .main-video{border-radius:0;box-shadow:none;}
-
-          /* PiP becomes a floating overlay in top-right corner */
-          .pip-panel{
-            position:absolute;
-            top:10px;
-            right:10px;
-            width:110px;
-            flex:none;
-            padding:0;
-            justify-content:flex-start;
-            z-index:20;
-          }
-          .pip{
-            aspect-ratio:3/4;
-            border-width:2px;
-            border-radius:10px;
-            box-shadow:0 4px 16px rgba(0,0,0,0.7);
-            width:100%;
-          }
+          .pip-panel{position:absolute;top:10px;right:10px;width:110px;flex:none;padding:0;justify-content:flex-start;z-index:20;}
+          .pip{aspect-ratio:3/4;border-width:2px;border-radius:10px;box-shadow:0 4px 16px rgba(0,0,0,0.7);width:100%;}
           .pip .pip-name{font-size:11px;left:6px;bottom:6px;}
           .pip .pip-mic{width:22px;height:22px;font-size:11px;top:6px;right:6px;}
-
-          /* name tag + rec badge smaller */
           .name-tag{font-size:12px;padding:4px 10px;left:10px;bottom:10px;}
           .rec-badge{font-size:11px;padding:3px 8px;top:10px;right:10px;}
-
-          /* speaking indicator above controls */
           .speak-indicator{bottom:70px;left:10px;font-size:11px;}
-
-          /* controls: compact single row */
           .controls{padding:10px 16px 16px;gap:0;}
           .ctrl-group{gap:20px;}
           .ctrl{font-size:10px;}
@@ -582,17 +470,11 @@ export default function Page() {
             )}
           </div>
 
-          {/* PiP — rep camera beside avatar, no gap */}
+          {/* PiP — doctor camera */}
           <div className="pip-panel"><div className="pip">
             <div className="video-slot">
-              <video
-                ref={cameraVideoRef}
-                autoPlay
-                playsInline
-                muted
-              />
+              <video ref={cameraVideoRef} autoPlay playsInline muted />
             </div>
-            {/* fallback placeholder when camera not active */}
             {!isActive && (
               <div className="pip-placeholder">
                 <svg width="28" height="28" fill="none" viewBox="0 0 24 24" stroke="#9fb0c9" strokeWidth="1.5">

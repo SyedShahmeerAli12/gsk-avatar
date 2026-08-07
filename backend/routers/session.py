@@ -28,15 +28,15 @@ async def summarize(body: SummarizeRequest):
         return {"summary": "No conversation to summarize."}
 
     transcript = "\n".join(
-        f"{'User' if m.role == 'user' else 'Sara'}: {m.text}"
+        f"{'Doctor' if m.role == 'user' else 'Patient'}: {m.text}"
         for m in body.messages
     )
 
     system_prompt = (
         "You are a session summarizer for a medical training simulation. "
-        "Given a conversation transcript between a doctor (user) and Ayesha Khan (a miscarriage patient), return a JSON object with exactly two keys:\n"
+        "Given a conversation transcript between a doctor (user) and Ayesha Khan (a patient with rhinosinusitis), return a JSON object with exactly two keys:\n"
         "1. \"summary\": a 2-3 sentence paragraph summarising what history the doctor took and what the patient disclosed. Start with 'During this session...'. Skip greetings.\n"
-        "2. \"topics\": a JSON array of 2-5 short topic labels (3-5 words each) representing the history areas covered. Example: [\"Chief Complaint\", \"Emotional State\", \"Future Pregnancy Concerns\"]\n"
+        "2. \"topics\": a JSON array of 2-5 short topic labels (3-5 words each) representing the history areas covered. Example: [\"Chief Complaint\", \"Symptom Duration\", \"Antibiotic Counselling\"]\n"
         "Return ONLY valid JSON, no markdown, no explanation."
     )
 
