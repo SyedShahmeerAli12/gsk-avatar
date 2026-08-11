@@ -39,32 +39,32 @@ export default function LoginPage() {
       className="min-h-screen flex items-center justify-center p-6"
       style={{
         background:
-          "radial-gradient(70% 55% at -5% 108%, rgba(250,140,80,.18) 0%, rgba(252,190,155,.08) 45%, rgba(255,255,255,0) 78%), linear-gradient(160deg,#fefdfc 0%,#fdfbfa 55%,#fdfaf8 100%)",
+          "radial-gradient(70% 55% at -5% 108%, rgba(107,45,139,.12) 0%, rgba(155,91,190,.06) 45%, rgba(255,255,255,0) 78%), linear-gradient(160deg,#fefdff 0%,#fdfaff 55%,#faf6ff 100%)",
       }}
     >
       <div className="w-full max-w-sm">
         {/* Logo */}
         <div className="flex flex-col items-center mb-8">
           <div className="flex items-center gap-2 mb-2">
-            <span className="text-3xl font-black tracking-widest" style={{ color: "#0a1030" }}>
+            <span className="text-3xl font-black tracking-widest" style={{ color: "#3b0764" }}>
               GSK
             </span>
             <span
               className="text-xs font-bold px-2 py-0.5 rounded"
-              style={{ background: "linear-gradient(118deg,#fe7d2e,#f53e2a)", color: "#fff", letterSpacing: "0.08em" }}
+              style={{ background: "linear-gradient(118deg,#8B3DAB,#5B1D7B)", color: "#fff", letterSpacing: "0.08em" }}
             >
               AUGMENTIN
             </span>
           </div>
-          <p className="text-xs font-semibold tracking-[0.3em]" style={{ color: "#2b3550" }}>
+          <p className="text-xs font-semibold tracking-[0.3em]" style={{ color: "#6B2D8B" }}>
             AI PATIENT SIMULATOR
           </p>
           <p className="text-xs text-gray-400 mt-2">Doctor Training Platform</p>
         </div>
 
         {/* Card */}
-        <div className="bg-white rounded-2xl border border-orange-100 shadow-xl shadow-orange-100/40 p-8">
-          <h2 className="text-base font-semibold mb-6" style={{ color: "#0a1030" }}>
+        <div className="bg-white rounded-2xl border shadow-xl p-8" style={{ borderColor: "rgba(107,45,139,0.15)", boxShadow: "0 20px 60px rgba(107,45,139,0.12)" }}>
+          <h2 className="text-base font-semibold mb-6" style={{ color: "#3b0764" }}>
             Sign in to continue
           </h2>
 
@@ -81,7 +81,7 @@ export default function LoginPage() {
                 autoComplete="username"
                 placeholder="Enter username"
                 className="w-full px-3.5 py-2.5 rounded-lg border border-gray-200 bg-gray-50 text-sm text-gray-900 placeholder-gray-400 focus:outline-none transition-all"
-                onFocus={(e) => (e.target.style.boxShadow = "0 0 0 2px #fe7d2e")}
+                onFocus={(e) => (e.target.style.boxShadow = "0 0 0 2px #8B3DAB")}
                 onBlur={(e) => (e.target.style.boxShadow = "")}
               />
             </div>
@@ -98,7 +98,7 @@ export default function LoginPage() {
                 autoComplete="current-password"
                 placeholder="Enter password"
                 className="w-full px-3.5 py-2.5 rounded-lg border border-gray-200 bg-gray-50 text-sm text-gray-900 placeholder-gray-400 focus:outline-none transition-all"
-                onFocus={(e) => (e.target.style.boxShadow = "0 0 0 2px #fe7d2e")}
+                onFocus={(e) => (e.target.style.boxShadow = "0 0 0 2px #8B3DAB")}
                 onBlur={(e) => (e.target.style.boxShadow = "")}
               />
             </div>
@@ -113,7 +113,7 @@ export default function LoginPage() {
               type="submit"
               disabled={loading}
               className="w-full py-3.5 rounded-xl font-bold text-white text-sm tracking-widest transition-all hover:opacity-90 hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed mt-1"
-              style={{ background: "linear-gradient(118deg,#fe7d2e 0%,#fa5a22 48%,#f53e2a 100%)" }}
+              style={{ background: "linear-gradient(118deg,#8B3DAB 0%,#6B2D8B 48%,#5B1D7B 100%)" }}
             >
               {loading ? "Signing in…" : "SIGN IN"}
             </button>

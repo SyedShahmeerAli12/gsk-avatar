@@ -281,7 +281,7 @@ export default function Page() {
           <div className="bg-white border border-gray-200 rounded-2xl shadow-sm p-6 mb-4">
             <div className="flex items-center gap-3 mb-4 pb-4 border-b border-gray-100">
               <div className="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0"
-                style={{ background: "linear-gradient(118deg,#fe7d2e,#f53e2a)" }}>
+                style={{ background: "linear-gradient(118deg,#8B3DAB,#5B1D7B)" }}>
                 <span className="text-white font-bold text-sm">AK</span>
               </div>
               <div>
@@ -310,7 +310,7 @@ export default function Page() {
                     <div className="flex flex-wrap gap-2">
                       {topics.map((t, i) => (
                         <span key={i} className="text-xs px-3 py-1.5 rounded-full font-medium border"
-                          style={{ background: "#fff5f0", color: "#f53e2a", borderColor: "#ffd0c0" }}>
+                          style={{ background: "#f5eefb", color: "#6B2D8B", borderColor: "#dbb8f0" }}>
                           {t}
                         </span>
                       ))}
@@ -326,7 +326,7 @@ export default function Page() {
             <button
               onClick={handleRestart}
               className="w-full py-3.5 rounded-xl text-white font-semibold text-sm hover:opacity-90 transition-colors"
-              style={{ background: "linear-gradient(118deg,#fe7d2e,#f53e2a)" }}
+              style={{ background: "linear-gradient(118deg,#8B3DAB,#5B1D7B)" }}
             >
               Start New Session
             </button>
@@ -384,7 +384,7 @@ export default function Page() {
 
         /* ── OVERLAY & INDICATORS ── */
         .start-overlay{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(11,18,32,0.88);z-index:10;gap:16px;padding:20px;}
-        .start-btn{background:linear-gradient(118deg,#fe7d2e,#f53e2a);border:none;color:#fff;padding:16px 40px;border-radius:28px;font-size:16px;font-weight:700;cursor:pointer;font-family:inherit;letter-spacing:0.3px;min-height:56px;width:100%;max-width:320px;box-shadow:0 8px 24px rgba(245,80,35,.30);}
+        .start-btn{background:linear-gradient(118deg,#8B3DAB,#5B1D7B);border:none;color:#fff;padding:16px 40px;border-radius:28px;font-size:16px;font-weight:700;cursor:pointer;font-family:inherit;letter-spacing:0.3px;min-height:56px;width:100%;max-width:320px;box-shadow:0 8px 24px rgba(107,45,139,.35);}
         .start-btn:hover{opacity:0.92;}
         .start-btn:disabled{opacity:0.5;cursor:not-allowed;}
         .speak-indicator{position:absolute;bottom:44px;left:14px;display:flex;align-items:center;gap:8px;background:rgba(10,14,22,0.7);backdrop-filter:blur(4px);padding:5px 12px;border-radius:20px;z-index:3;font-size:12px;color:#fff;}
@@ -458,7 +458,7 @@ export default function Page() {
             {/* Start / connecting overlay */}
             {!isActive && (
               <div className="start-overlay">
-                <div style={{ fontSize: 14, color: '#9fb0c9', marginBottom: 4 }}>Ayesha Khan · 37 years · Rhinosinusitis Case</div>
+                <div style={{ fontSize: 14, color: '#9fb0c9', marginBottom: 4 }}>Ayesha Khan 37</div>
                 {isConnecting ? (
                   <div style={{ display: 'flex', alignItems: 'center', gap: 8, color: '#22c55e', fontSize: 13 }}>
                     <span className="speak-dot" /> Connecting to patient…
