@@ -459,7 +459,7 @@ export default function Page() {
             {/* Start / connecting overlay */}
             {!isActive && (
               <div className="start-overlay">
-                <div style={{ fontSize: 14, color: '#9fb0c9', marginBottom: 4 }}>Ayesha Khan 37</div>
+                <div style={{ fontSize: 14, color: '#9fb0c9', marginBottom: 4 }}>Ayesha Khan 46</div>
                 {isConnecting ? (
                   <div style={{ display: 'flex', alignItems: 'center', gap: 8, color: '#22c55e', fontSize: 13 }}>
                     <span className="speak-dot" /> Connecting to patient…
