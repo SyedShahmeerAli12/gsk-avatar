@@ -419,7 +419,7 @@ export default function Page() {
         {/* TOP BAR */}
         <div className="topbar">
           <div className="topbar-left">
-            <span style={{ fontSize: '1.25rem', fontWeight: 900, letterSpacing: '0.04em', color: '#c084fc' }}>GSK</span>
+            <img src="/gsk-new-logo.png" alt="GSK" style={{ height: 32, objectFit: 'contain' }} />
             <h1>Augmentin Patient Simulator</h1>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 12, color: '#9fb0c9' }}>

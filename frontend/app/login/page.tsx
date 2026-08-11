@@ -45,14 +45,8 @@ export default function LoginPage() {
       <div className="w-full max-w-sm">
         {/* Logo */}
         <div className="flex flex-col items-center mb-8">
-          <div className="flex items-center gap-2 mb-3">
-            <span style={{ fontSize: "2.2rem", fontWeight: 900, letterSpacing: "0.04em", color: "#3b0764" }}>GSK</span>
-            <span
-              className="text-xs font-bold px-2 py-0.5 rounded"
-              style={{ background: "linear-gradient(118deg,#8B3DAB,#5B1D7B)", color: "#fff", letterSpacing: "0.08em" }}
-            >
-              AUGMENTIN
-            </span>
+          <div className="flex items-center justify-center mb-3">
+            <img src="/gsk-new-logo.png" alt="GSK" style={{ height: 72, objectFit: "contain" }} />
           </div>
           <p className="text-xs font-semibold tracking-[0.3em]" style={{ color: "#6B2D8B" }}>
             AI PATIENT SIMULATOR
