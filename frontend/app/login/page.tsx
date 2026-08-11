@@ -45,10 +45,8 @@ export default function LoginPage() {
       <div className="w-full max-w-sm">
         {/* Logo */}
         <div className="flex flex-col items-center mb-8">
-          <div className="flex items-center gap-2 mb-2">
-            <span className="text-3xl font-black tracking-widest" style={{ color: "#3b0764" }}>
-              GSK
-            </span>
+          <img src="/gsk-logo.png" alt="GSK" className="h-12 mb-3" style={{ objectFit: "contain" }} />
+          <div className="flex items-center gap-2 mb-1">
             <span
               className="text-xs font-bold px-2 py-0.5 rounded"
               style={{ background: "linear-gradient(118deg,#8B3DAB,#5B1D7B)", color: "#fff", letterSpacing: "0.08em" }}

@@ -419,7 +419,8 @@ export default function Page() {
         {/* TOP BAR */}
         <div className="topbar">
           <div className="topbar-left">
-            <h1>Augmentin Patient Simulator · GSK</h1>
+            <img src="/gsk-logo.png" alt="GSK" style={{ height: 28, objectFit: 'contain' }} />
+            <h1>Augmentin Patient Simulator</h1>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 12, color: '#9fb0c9' }}>
             {isActive && <><span style={{ width: 7, height: 7, borderRadius: '50%', background: '#22c55e', display: 'inline-block' }} /> Live</>}
