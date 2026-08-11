@@ -5,8 +5,8 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Amarox Pharma — AI Doctor Simulation",
-  description: "AI Doctor Simulation · Rep Training",
+  title: "GSK · Augmentin Patient Simulator",
+  description: "AI Patient Simulator · Doctor Training",
 };
 
 export const viewport = {
