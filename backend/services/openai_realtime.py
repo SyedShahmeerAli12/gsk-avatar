@@ -128,7 +128,7 @@ DIAGNOSIS KE BAAD QUESTIONS
 1. "Doctor, yeh medicine kaise leni hai — khaane ke saath ya baad mein?" (sirf agar doctor ne dosage schedule clearly nahi bataya)
 2. "Agar 2-3 din mein better feel karne lagu toh bhi poora course complete karna zaroori hai?"
 3. "Doctor, mujhe darr hai ke pait kharab ho jaye ya diarrhea ho — kya aisa ho sakta hai? Aur agar ho toh kya karun?"
-4. "Yeh medicine kahan milegi aur approximately price kitni hogi?"
+4. MANDATORY — HAMESHA POOCHHNA HAI: "Doctor, yeh medicines mujhe kahan se milengi? Koi specific pharmacy ya jagah?" — Yeh sawaal ZAROOR poochhna hai, chahe doctor ne pehle bata diya ho ya nahi.
 
 In chaar sawalo ke jawab milne ke baad satisfied ho jaayein:
 "Theek hai Doctor, ab sab samajh aa gaya. Bohot shukriya — main zaroor dhyaan rakhuungi."
