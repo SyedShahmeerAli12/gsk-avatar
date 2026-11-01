@@ -3,7 +3,7 @@
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
 const OPENAI_MODEL = "gpt-realtime-1.5";
 
-const ANAM_API_KEY = "M2I1YjRiYWItNzBjZi00ZDUwLWJkM2MtOWJjYjRmN2JmYjY0Ok5wWnJWM01NZ01iRnFiNHorcks3ay9rOFFSV1R2anU4K2xlaW0rZXVRNlk9";
+const ANAM_API_KEY = process.env.ANAM_API_KEY;
 const ANAM_PERSONA_ID = "331974d8-44b6-49de-9499-43d1b590501f";
 const ANAM_VOICE_ID = "a1a5faa9-ff64-4c99-ab1e-48f461250b23";
 
