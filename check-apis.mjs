@@ -1,5 +1,6 @@
 // API health check script for OpenAI and Anam APIs
-const OPENAI_API_KEY = "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";
+// Run with: node --env-file=.env check-apis.mjs
+const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
 const OPENAI_MODEL = "gpt-realtime-1.5";
 
 const ANAM_API_KEY = "M2I1YjRiYWItNzBjZi00ZDUwLWJkM2MtOWJjYjRmN2JmYjY0Ok5wWnJWM01NZ01iRnFiNHorcks3ay9rOFFSV1R2anU4K2xlaW0rZXVRNlk9";
